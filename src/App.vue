@@ -1,7 +1,8 @@
 <template>
+  <div>
   <!-- <login v-if="needLogin"></login> -->
-  <Suspense>
-    <template #default>
+  <!-- <Suspense> -->
+    <!-- <template #default> -->
       <!--<header class="main-header">
         <div class="main-logo-area">
           <span class="app-icon" style="color: white;font-weight: bolder;font-size: 26px;margin-top: 5px;margin-right: 10px;">ICBC</span>
@@ -28,11 +29,12 @@
         <router-view></router-view>
         <footer class="layout-footer is-absolute">中国工商银行版权所有</footer>
       </section> -->
-    </template>
+    <!-- </template>
     <template #fallback>
       <div>Loading</div>
-    </template>
-  </Suspense>
+    </template> -->
+  <!-- </Suspense> -->
+  </div>
 </template>
 
 <script>

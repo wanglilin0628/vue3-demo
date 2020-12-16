@@ -1,0 +1,161 @@
+{
+	"code": 0,
+	"msg": "查询菜单节点功能列表成功",
+	"result": {
+		"retMenu": [
+			{
+				"id": "M001",
+				"defaultLabel": "CTP平台展示菜单", 
+				"parentId": null, 
+				"level": null, 
+				"flag": null,
+				"url": "",
+				"itemType": null,
+				"menuOrder": null,
+				"status": null,
+				"text": null,
+				"pri": null,
+				"roleId": null,
+				"childrens": [
+					{
+						"id": "M1001",
+						"defaultLabel": "系统管理", 
+						"parentId": "M001", 
+						"level": null, 
+						"flag": null,
+						"url": "",
+						"itemType": null,
+						"menuOrder": null,
+						"status": null,
+						"text": null,
+						"pri": null,
+						"roleId": null,
+						"childrens": [
+							{
+								"id": "M11001",
+								"defaultLabel": "权限管理", 
+								"parentId": "M1001", 
+								"level": null, 
+								"flag": null,
+								"url": "",
+								"itemType": null,
+								"menuOrder": null,
+								"status": null,
+								"text": null,
+								"pri": null,
+								"roleId": null,
+								"childrens": [
+									{
+										"id": "I11001",
+										"defaultLabel": "机构管理", 
+										"parentId": "M0001", 
+										"level": null, 
+										"flag": null,
+										"url": "/branch",
+										"itemType": null,
+										"menuOrder": null,
+										"status": null,
+										"text": null,
+										"pri": null,
+										"roleId": null,
+										"childrens": []
+									},
+									{
+										"id": "I11002",
+										"defaultLabel": "角色管理",
+										"parentId": "M0001",
+										"level": null,
+										"url": "/role",
+										"itemType": null,
+										"menuOrder": null,
+										"status": null,
+										"text": null,
+										"roleId": null,
+										"childrens": []
+									}
+								]
+							},
+							{
+								"id": "M11002",
+								"defaultLabel": "菜单管理", 
+								"parentId": "M1001", 
+								"level": null, 
+								"flag": null,
+								"url": "",
+								"itemType": null,
+								"menuOrder": null,
+								"status": null,
+								"text": null,
+								"pri": null,
+								"roleId": null,
+								"childrens": [
+									{
+										"id": "I12001",
+										"defaultLabel": "菜单管理", 
+										"parentId": "M11002", 
+										"level": null, 
+										"flag": null,
+										"url": "/menu",
+										"itemType": null,
+										"menuOrder": null,
+										"status": null,
+										"text": null,
+										"pri": null,
+										"roleId": null,
+										"childrens":[]
+									},
+									{
+										"id": "I12002",
+										"defaultLabel": "菜单管理", 
+										"parentId": "M11002", 
+										"level": null, 
+										"flag": null,
+										"url": "/item",
+										"itemType": null,
+										"menuOrder": null,
+										"status": null,
+										"text": null,
+										"pri": null,
+										"roleId": null,
+										"childrens": []
+									}
+								]
+							},
+							{
+								"id": "M11003",
+								"defaultLabel": "用户管理",
+								"parentId": "M1001",
+								"level": null,
+								"flag": null,
+								"url": "",
+								"itemType": null,
+								"menuOrder": null,
+								"status": null,
+								"text": null,
+								"pri": null,
+								"roleId": null,
+								"childrens": [
+									{
+										"id": "I13001",
+										"defaultLabel": "用户管理", 
+										"parentId": "M11003", 
+										"level": null, 
+										"flag": null,
+										"url": "/user",
+										"itemType": null,
+										"menuOrder": null,
+										"status": null,
+										"text": null,
+										"pri": null,
+										"roleId": null,
+										"childrens":[]
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}
