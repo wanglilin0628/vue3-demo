@@ -1,5 +1,6 @@
 <template>
   <div>
+    <header>App</header>
   <!-- <login v-if="needLogin"></login> -->
   <!-- <Suspense> -->
     <!-- <template #default> -->
@@ -23,12 +24,18 @@
         </div>
       </header> -->
       <!-- 异步组件 -->
-      <async-menu></async-menu>
-      <!-- <section class="main-section" :class="{'section-padding-left': leftCollapse}">
-        <breadcrumb></breadcrumb>
-        <router-view></router-view>
-        <footer class="layout-footer is-absolute">中国工商银行版权所有</footer>
-      </section> -->
+    <div>
+      <div style="width:20%">
+        <async-menu></async-menu>
+      </div>
+      <div style="width:50%">
+        <section class="main-section" :class="{'section-padding-left': leftCollapse}">
+          <breadcrumb></breadcrumb>
+          <router-view></router-view>
+          <footer class="layout-footer is-absolute">中国工商银行版权所有</footer>
+        </section>
+      </div>
+    </div>
     <!-- </template>
     <template #fallback>
       <div>Loading</div>
