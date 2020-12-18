@@ -1,74 +1,163 @@
 <template>
-  <div>
-    <header>App</header>
-  <!-- <login v-if="needLogin"></login> -->
-  <!-- <Suspense> -->
-    <!-- <template #default> -->
-      <!--<header class="main-header">
+  <div class="top-wrapper">
+    <div class="main-wrapper">
+      <header class="main-header">
+        <!-- logo区域 -->
         <div class="main-logo-area">
-          <span class="app-icon" style="color: white;font-weight: bolder;font-size: 26px;margin-top: 5px;margin-right: 10px;">ICBC</span>
-          <img class="app-logo" width="64px" height="64px" src="./assets/logo.png">
-          <h1 class="app-title" style="color: white;">{{title}}</h1>
+          <span class="app-icon">Wanglilin</span>
+          <img class="app-logo" src="../src/assets/logo.png" />
+          <h1 class="app-title" style="color:white">{{title}}</h1>
         </div>
-        <div class="main-info" style="color: white;"> -->
-          <!-- <search></search> -->
-          <!-- <notice></notice> -->
-          <!-- <div class="main-name-wrapper">
-            <span class="layout-icon icon-person main-name-icon"></span>
-            <div class="main-name">{{userInfo.name}}</div>
-            <el-select v-model="userInfo" class="userinfo-select" popper-class="userinfo-dropdown">
-              <el-option v-for="item in userInfoList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-            <span class="layout-icon un-icon-quit main-logoff" @click="logOff"></span>
+        <!-- 用户信息区域 -->
+        <div class="user-info" style="color: white;">
+          <div class="user-info-wrapper">
+            <i class="el-icon-user-solid user-name-icon"></i>
+            <div class="user-name">{{userInfo.name}}</div>
           </div>
+          <i class="el-icon-circle-close user-logout" @click="logout"></i>
         </div>
-      </header> -->
-      <!-- 异步组件 -->
-    <div>
-      <div style="width:20%">
-        <async-menu></async-menu>
-      </div>
-      <div style="width:50%">
-        <section class="main-section" :class="{'section-padding-left': leftCollapse}">
-          <breadcrumb></breadcrumb>
-          <router-view></router-view>
-          <footer class="layout-footer is-absolute">中国工商银行版权所有</footer>
-        </section>
-      </div>
+      </header>
+      <section class="main-section">
+        <router-view></router-view>
+        <footer class="layout-footer is-absolute">vue3测试</footer>
+      </section>
     </div>
-    <!-- </template>
-    <template #fallback>
-      <div>Loading</div>
-    </template> -->
-  <!-- </Suspense> -->
   </div>
 </template>
 
 <script>
-import { reactive } from 'vue'
-import AsyncMenu from './views/async_menu/index.vue'
+import { reactive, ref } from 'vue'
 export default {
-  components: {
-    AsyncMenu
-  },
   setup() {
-    const { userInfo, userInfoList } = userInfoLogic()
+    const title = ref('Vue3-demo')
+    const userInfo = reactive({name: 'Wanglilin'})
     return {
-      userInfo,
-      userInfoList
+      title,
+      userInfo
     }
-  }
-}
-function userInfoLogic() {
-  const userInfo = reactive({})
-  const userInfoList = reactive([])
-  return {
-    userInfo,
-    userInfoList
   }
 }
 </script>
 
-<style>
-
+<style lang="scss">
+  .top-wrapper {
+    width: 100%;
+    height: 100%;
+    min-width: 1200px;
+    .main-wrapper {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      header.main-header {
+        background-color: rgb(49, 58, 67);
+        display: block;
+        box-sizing: border-box;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 48px;
+        z-index: 4;
+        padding: 0;
+        .main-logo-area {
+          left: 16px;
+          position: absolute;
+          display: flex;
+          align-items: center;
+          .app-icon {
+            color: white;
+            font-weight: bolder;
+            font-size: 19px;
+            margin-right: 10px;
+          }
+          .app-logo {
+            width: 36px;
+            height: 36px;
+            // color: #e25355;
+          }
+          .app-title {
+            font-size: 19px;
+            font-weight: 700;
+            margin-left: 10px;
+          }
+        }
+        .user-info {
+          position: absolute;
+          right: 20px;
+          top: 50%;
+          width: 280px;
+          margin-top: -15px;
+          .user-info-wrapper {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #dfe0e1;
+            position: absolute;
+            right: 36px;
+            .user-name-icon {
+              position: absolute;
+              left: -40px;
+              top: 7px;
+              color: #6a7784;
+              &:before {
+                font-size: 18px;
+                width: 24px;
+                height: 24px;
+                padding: 2px;
+                border-radius: 50%;
+                background: #4a555f;
+              }
+            }
+            .user-name {
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 14px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 170px;
+              color: #dfe0e1;
+              margin-top: 8px;
+            }
+          }
+          .user-logout {
+            position: absolute;
+            top: 5px;
+            font-size:20px;
+            right: 0px;
+            padding: 0px;
+            cursor: pointer;
+          }
+        }
+      }
+      section.main-section {
+        position: relative;
+        box-sizing: border-box;
+        height: 100%;
+        width: 100%;
+        min-width: 1200px;
+        overflow: auto;
+        padding: 48px 0 0 242px;
+        transition: all .3s;
+        background-color: #EBEBEB;
+        .layout-footer {
+          font-size: 12px;
+          color: #777;
+          margin: auto;
+          padding: 18px 0 22px 0;
+          text-align: center;
+          &.is-absolute {
+            position: absolute;
+            left: 121px;
+            right: 0px;
+          }
+        }
+        .page-wrapper {
+          min-height: 78.29%;
+          background-color: #ffffff;
+          margin: 16px;
+          padding: 24px 24px 24px 24px;
+          border-radius: 3px;
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
 </style>

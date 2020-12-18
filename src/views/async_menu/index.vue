@@ -11,10 +11,12 @@
 
 <script>
 import { reactive } from 'vue'
+import { useStore } from 'vuex'
 import data from '../../../public/data/menu.json'
 export default {
   name: 'async-menu',
   setup() {
+    const store = useStore()
     const menu = reactive(data.result.retMenu)
     const retMenu = reactive(menu[0].childrens[0].childrens)
     function selectMenu(index, indexPath) {
