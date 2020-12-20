@@ -1,6 +1,7 @@
 <template>
   <div class="top-wrapper">
-    <div class="main-wrapper">
+    <login v-if="needLogin"></login>
+    <div v-else class="main-wrapper">
       <header class="main-header">
         <!-- logo区域 -->
         <div class="main-logo-area">
@@ -17,6 +18,7 @@
           <i class="el-icon-circle-close user-logout" @click="logout"></i>
         </div>
       </header>
+      <async-menu></async-menu>
       <section class="main-section">
         <router-view></router-view>
         <footer class="layout-footer is-absolute">vue3测试</footer>
@@ -26,14 +28,24 @@
 </template>
 
 <script>
+import AsyncMenu from '@/views/async_menu'
+import Login from '@/views/login'
 import { reactive, ref } from 'vue'
+
 export default {
+  name: 'app',
+  components: {
+    AsyncMenu,
+    Login
+  },
   setup() {
     const title = ref('Vue3-demo')
     const userInfo = reactive({name: 'Wanglilin'})
+    const needLogin = ref(true)
     return {
       title,
-      userInfo
+      userInfo,
+      needLogin
     }
   }
 }
