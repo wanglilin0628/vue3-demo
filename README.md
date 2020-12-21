@@ -6,10 +6,12 @@ npm install
 ```
 
 ### 启动工程
-### 1) 启动vue前端工程
-### 2) 启动node.js后端
+#### 1) 启动vue前端工程
 ```
-npm run serve
+vue-cli-service server
+```
+#### 2) 启动node.js后端
+```
 npm run express
 // or
 node index.js
