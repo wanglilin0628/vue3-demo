@@ -46,6 +46,7 @@ export default {
     const title = ref('Vue3-demo')
 
     if (window.sessionStorage.getItem('needLogin') === 'false') {
+      store.dispatch('getUserInfo', window.sessionStorage.getItem('userInfo'))
       store.commit('setNeedLogin', {flag: false})
     }
     const needLogin = computed(() => store.state.needLogin)

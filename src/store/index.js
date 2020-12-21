@@ -21,6 +21,15 @@ export default createStore({
     }
   },
   actions: {
+    /**
+     * 从sessionStorage获取用户信息并保存至state中(为了保证刷新后留在当前页面)
+     * @param {String} payload 用户信息
+     */
+    getUserInfo({commit}, payload) {
+      commit('setUserInfo', {
+        name: JSON.parse(payload).name
+      })
+    }
   },
   modules: {
   }
