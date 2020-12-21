@@ -5,9 +5,14 @@
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 启动工程
+### 1) 启动vue前端工程
+### 2) 启动node.js后端
 ```
 npm run serve
+npm run express
+// or
+node index.js
 ```
 
 ### Compiles and minifies for production
