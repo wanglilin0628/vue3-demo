@@ -1,6 +1,18 @@
-import { Sequelize } from 'sequelize'
-import config from '@/orm/config'
+const config = require('./config.js')
+const Sequelize = require('sequelize')
+const account = require('./models/account.js')
 
-export const sequelize = new Sequelize(config)
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+  host: config.host,
+  port: config.port,
+  dialect: 'mysql',
+  pool: config.pool,
+  define: {
+    timestamps: false,
+    freezeTableName: true
+  }
+})
 
-export const Account = sequelize.import('@/orm/models/account')
+const Account = sequelize.define('Account', account)
+
+module.exports = Account

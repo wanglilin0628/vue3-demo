@@ -13,7 +13,7 @@
         <div class="user-info" style="color: white;">
           <div class="user-info-wrapper">
             <i class="el-icon-user-solid user-name-icon"></i>
-            <div class="user-name">{{userInfo.name}}</div>
+            <div class="user-name">{{name}}</div>
           </div>
           <i class="el-icon-circle-close user-logout" @click="logout"></i>
         </div>
@@ -30,7 +30,9 @@
 <script>
 import AsyncMenu from '@/views/async_menu'
 import Login from '@/views/login'
-import { reactive, ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'app',
@@ -39,16 +41,37 @@ export default {
     Login
   },
   setup() {
+    const store = useStore()
+    const router = useRouter()
     const title = ref('Vue3-demo')
-    const userInfo = reactive({name: 'Wanglilin'})
-    const needLogin = ref(true)
+
+    if (window.sessionStorage.getItem('needLogin') === 'false') {
+      store.commit('setNeedLogin', {flag: false})
+    }
+    const needLogin = computed(() => store.state.needLogin)
+    const name = computed(() => store.state.userInfo.name)
+    function logout() {
+      if (window.confirm('是否确认退出?')) {
+        needLogin.value = true
+        window.sessionStorage.clear()
+        router.go(0)
+      }
+    }
     return {
       title,
-      userInfo,
-      needLogin
+      name,
+      needLogin,
+      logout
     }
   }
 }
+
+/**
+ * 用户信息数据与相关逻辑
+ */
+// function useUserInfo() {
+//   const userInfo = reactive
+// }
 </script>
 
 <style lang="scss">

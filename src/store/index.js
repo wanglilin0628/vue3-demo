@@ -4,20 +4,20 @@ export default createStore({
   state: {
     firstMenuShow: true,
     leftCollapse: false,
-    // url: 需要跳转的地址; params: 跳转时所带的参数(非必输)
-    // go: 在history记录中向前或向后多少步
-    // replace: 设置为true, 不会向history添加新记录, 其他与push类似
-    globalRoute: {url: '/', params: {}, go: '', replace: false}
+    needLogin: true,
+    userInfo: {
+      name: ''
+    }
   },
   mutations: {
-    setFirstMenuShow({firstMenuShow}, flag) {
-      firstMenuShow = flag
+    setFirstMenuShow(state, payload) {
+      state.firstMenuShow = payload.flag
     },
-    setLeftCollapse({leftCollapse}, flag) {
-      leftCollapse = flag
+    setNeedLogin(state, payload) {
+      state.needLogin = payload.flag
     },
-    gotoPage({globalRouter}, route) {
-      globalRouter = route
+    setUserInfo(state, payload) {
+      state.userInfo.name = payload.name
     }
   },
   actions: {

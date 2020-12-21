@@ -28,6 +28,8 @@
 
 <script>
 import { reactive } from 'vue'
+import axios from 'axios'
+import { useStore } from 'vuex'
 export default {
   setup() {
     const params = reactive({
@@ -38,10 +40,29 @@ export default {
       username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
       password: [{required: true, message: '请输入密码', trigger: 'blur'}]
     })
-    // TODO: 完成登录逻辑和数据库
+    const store = useStore()
+
     function submitForm() {
-      console.log(params.username)
-      console.log(params.password)
+      axios.post('/api/login', {
+        username: params.username,
+        password: params.password
+      }).then((res) => {
+        if (res.status === 200) {
+          console.log('登录成功')
+          store.commit('setNeedLogin', {
+            flag: false
+          })
+          store.commit('setUserInfo', res.data)
+          window.sessionStorage.setItem('userInfo', JSON.stringify({
+            name: res.data.name,
+            department: res.data.department,
+            group: res.data.group
+          }))
+          window.sessionStorage.setItem('needLogin', store.state.needLogin)
+        }
+      }).catch((err) => {
+        console.log('登录异常:', err)
+      })
     }
     return {
       params,
