@@ -8,14 +8,14 @@ const routes = [
     component: Home
   },
   {
-    path: '/branch',
-    name: 'Branch',
-    component: () => import('../views/branch'),
-    meta: { title: 'Branch Management' },
+    path: '/user',
+    name: 'User',
+    component: () => import('../views/user'),
+    meta: { title: 'User Management' },
     children: [
-      { path: 'branch/add', name: '/branch/add', component: import('../views/branch/modules/branch_add'), meta: { title: 'newBranch', parentPath: '/branch' }},
-      { path: 'branch/add', name: '/branch/modify', component: import('../views/branch/modules/branch_modify'), meta: { title: 'modifyBranch', parentPath: '/branch' }},
-      { path: 'branch/details', name: '/branch/details', component: import('../views/branch/modules/branch_details'), meta: { title: 'detailsBranch', parentPath: '/branch' }}
+      { path: 'user/add', name: '/user/add', component: import('../views/user/modules/user_add'), meta: { title: 'userAdd', parentPath: '/user' }},
+      { path: 'user/modify', name: '/user/modify', component: import('../views/user/modules/user_modify'), meta: { title: 'userModify', parentPath: '/user' }},
+      { path: 'user/details', name: '/user/details', component: import('../views/user/modules/user_details'), meta: { title: 'userDetail', parentPath: '/user' }}
     ]
   },
   {

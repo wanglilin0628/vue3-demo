@@ -25,6 +25,7 @@ import data from '../../../public/data/menu.json'
 export default {
   name: 'async-menu',
   setup() {
+    console.log('setup')
     const { menuData, selectMenu } = useMenuData()
     return {
       menuData,

@@ -47,11 +47,11 @@
 								"childrens": [
 									{
 										"id": "I11001",
-										"defaultLabel": "机构管理", 
+										"defaultLabel": "用户管理", 
 										"parentId": "M0001", 
 										"level": null, 
 										"flag": null,
-										"url": "/branch",
+										"url": "/user",
 										"itemType": null,
 										"menuOrder": null,
 										"status": null,

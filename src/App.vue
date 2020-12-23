@@ -1,4 +1,5 @@
 <template>
+<!-- <login></login> -->
   <div class="top-wrapper">
     <login v-if="needLogin"></login>
     <div v-else class="main-wrapper">
@@ -35,7 +36,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 export default {
-  name: 'app',
+  name: '',
   components: {
     AsyncMenu,
     Login
