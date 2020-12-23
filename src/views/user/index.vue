@@ -3,17 +3,18 @@
     <div class="user-list-wrapper">
       <el-card>
         <el-table :data="userList">
-          <template #empty>
-            <div class="no-data">
-              <img src="../../assets/icbc.png" :alt="noData" />
-              <div class="no-data-text">{{noData}}</div>
-            </div>
-          </template>
+          <!-- <template #empty> -->
+            <!-- <div class="no-data"> -->
+              <!-- <img src="../../assets/icbc.png" :alt="noData" /> -->
+              <!-- <div class="no-data-text">{{noData}}</div> -->
+            <!-- </div> -->
+          <!-- </template> -->
           <el-table-column prop="username" label="用户名" width="140px"></el-table-column>
           <el-table-column prop="name" label="姓名" width="140px"></el-table-column>
           <el-table-column prop="department" label="部门" width="140px"></el-table-column>
           <el-table-column prop="group" label="团队" width="140px"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="160px">
+          <el-table-column fixed="left" label="选中" width="140px"></el-table-column>
+          <el-table-column label="操作" width="160px">
             <template #scope>
               <el-button type="text"></el-button>
               <el-button type="text"></el-button>
@@ -28,7 +29,7 @@
 
 <script>
 export default {
-
+  // TODO [1.0.2] 完成用户的展示，包含用户名(统一认证号)、姓名、部门、团队
 }
 </script>
 
