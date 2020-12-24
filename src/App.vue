@@ -56,7 +56,11 @@ export default {
       if (window.confirm('是否确认退出?')) {
         needLogin.value = true
         window.sessionStorage.clear()
-        router.go(0)
+        // router.go(0)
+        router.push({path: '/'})
+        setTimeout(() => {
+          router.go(0)
+        }, 0)
       }
     }
     return {

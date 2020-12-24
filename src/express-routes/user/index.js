@@ -6,8 +6,12 @@ const router = express.Router()
  * 用户登录请求
  */
 router.post('/login', async (req, res) => {
-  const userInfo = await userMethod.login(req.body.username, req.body.password)
-  userInfo ? res.status(200).send(userInfo.dataValues) : res.sendStatus(401)
+  const userInfo = await userMethod.getUser(req.body.username)
+  if (userInfo !== null && req.body.password === userInfo.dataValues.password) {
+    res.status(200).send(userInfo.dataValues)
+  } else {
+    res.sendStatus(401)
+  }
 })
 
 /**
@@ -23,7 +27,7 @@ router.post('/getUserList', async (req, res) => {
  */
 router.post('/deleteUser', async (req, res) => {
   const result = await userMethod.deleteUserByName(req.body.username)
-  result ? res.status(200).send(result) : res.sendStatus(404)
+  result ? res.sendStatus(200) : res.sendStatus(404)
 })
 
 module.exports = router

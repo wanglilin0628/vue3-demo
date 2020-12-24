@@ -1,25 +1,25 @@
 const DataTypes = require('sequelize')
 
 module.exports = {
-  created_time: {
+  created_time: { // 创建时间
     type: DataTypes.DATE
   },
-  update_time: {
+  update_time: { // 修改时间
     type: DataTypes.DATE
   },
-  username: {
+  username: { // 用户名
     type: DataTypes.STRING
   },
-  name: {
+  name: { // 姓名
     type: DataTypes.STRING
   },
-  password: {
+  password: { // 密码
     type: DataTypes.STRING
   },
-  department: {
+  department: { // 部门
     type: DataTypes.STRING
   },
-  group: {
+  group: { // 团队
     type: DataTypes.STRING
   }
 }

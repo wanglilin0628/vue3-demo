@@ -3,16 +3,15 @@ const account = require('../../orm/models/account.js')
 const Account = sequelize.define('Account', account)
 
 /**
- * 用户登录
+ * 根据用户名查询
  * @param {String} username 用户名
- * @param {String} password 密码
  * @returns {Object} userInfo 用户信息
  */
-const login = async (username, password) => {
-  const account = await Account.findOne({
+const getUser = async (username) => {
+  const user = await Account.findOne({
     where: {username: username}
   })
-  return account.dataValues.password === password ? account : null
+  return user || null
 }
 
 /**
@@ -41,7 +40,7 @@ const deleteUserByName = async (username) => {
 }
 
 module.exports = {
-  login,
+  getUser,
   getUserList,
   deleteUserByName
 }

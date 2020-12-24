@@ -1,51 +1,105 @@
 <template>
   <div class="user-wrapper page-wrapper">
-    <div class="user-list-wrapper">
+    <div class="user-list-wrapper" v-if="!opCardShow">
       <el-card>
-        <el-table :data="userList" style="width: auto">
+        <el-table :data="userList" style="width: auto" :cell-class-name="getCellIndex">
           <template #empty>
             <div class="no-data">
-              <!-- <img src="../../assets/icbc.png" :alt="noData" /> -->
-              <div class="no-data-text">{{noData}}</div>
+              <el-button type="primary" @click="navigateTo('add')">新增用户</el-button>
+              <p class="no-data-text">No Data</p>
             </div>
           </template>
-          <el-table-column prop="username" label="用户名" width="140px"></el-table-column>
+          <el-table-column prop="username" label="用户名" width="140px">
+            <template #default={row}>
+              <el-button type="text" @click="navigateTo('details', row)">{{row.username}}</el-button>
+            </template>
+          </el-table-column>
           <el-table-column prop="name" label="姓名" width="140px"></el-table-column>
           <el-table-column prop="department" label="部门" width="140px"></el-table-column>
           <el-table-column prop="group" label="团队" width="140px"></el-table-column>
-          <!-- <el-table-column fixed="left" label="选中" width="140px"></el-table-column> -->
-          <el-table-column label="操作" width="160px">
-            <template #scope>
-              <el-button type="text"></el-button>
-              <el-button type="text"></el-button>
-              <el-button type="text"></el-button>
+          <el-table-column label="操作" width="240px" align="center">
+            <template #default={row}>
+              <el-button type="text" size="small" class="normal-btn" @click="navigateTo('add')">新增</el-button>
+              <el-button type="text" size="small" class="normal-btn" @click="navigateTo('modify', row)">修改</el-button>
+              <el-button type="text" size="small" class="normal-btn" @click="deleteUser(row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
     </div>
+    <el-card class="user-op-wrapper" v-else>
+      <router-view></router-view>
+    </el-card>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onUnmounted, ref } from 'vue'
 import Axios from 'axios'
+import { useRouter } from 'vue-router'
 export default {
-  // TODO [1.0.2] 完成用户的展示，包含用户名(统一认证号)、姓名、部门、团队
   setup() {
-    const noData = ref('No Data')
-    const userList = ref([])
-    Axios.post('/api/user/getUserList', {}).then((res) => {
-      userList.value = res.data
-    }).catch((e) => {
-      console.log('获取用户列表异常', e)
+    const router = useRouter()
+
+    const { userList, delUser } = useUserList()
+    function deleteUser(row) {
+      delUser(row, userList)
+    }
+
+    const opCardShow = ref(false)
+    window.addEventListener('popstate', () => { opCardShow.value = false })
+    onUnmounted(() => {
+      window.removeEventListener('popstate', () => { opCardShow.value = false })
     })
+    function navigateTo(flag, row = null) {
+      opCardShow.value = true
+      if (flag === 'add') {
+        router.push({path: '/user/add'})
+      } else if (flag === 'modify') {
+        router.push({path: '/user/modify', params: row})
+      } else {
+        router.push({path: '/user/details', params: row})
+      }
+    }
+
+    function getCellIndex({row, column, rowIndex, columnIndex}) {
+      row.index = rowIndex
+    }
     return {
-      noData,
-      userList
+      userList,
+      deleteUser,
+      getCellIndex,
+      opCardShow,
+      navigateTo
     }
   }
 }
+
+function useUserList() {
+  const userList = ref([])
+  Axios.post('/api/user/getUserList', {}).then((res) => {
+    userList.value = res.data
+  }).catch((e) => {
+    console.log('获取用户列表异常', e)
+  })
+
+  function delUser(row, useUserList) {
+    Axios.post('/api/user/deleteUser', {
+      username: row.username
+    }).then((res) => {
+      if (res.status === 200) {
+        useUserList.value.splice(row.index, 1)
+      }
+    }).catch((e) => {
+      console.log('用户删除失败:', e)
+    })
+  }
+  return {
+    userList,
+    delUser
+  }
+}
+
 </script>
 
 <style lang='scss'>
@@ -78,13 +132,18 @@ export default {
       border-right: none;
     }
     .el-table__body {
-      // border-top: 1px solid #cccccc !important;
-      // border-block: 1px solid #cccccc !important;
       border-bottom: 1px solid #cccccc !important;
+      tr:hover {
+        .normal-btn {
+          display: inline;
+        }
+      }
     }
-    .el-card {
-      // border: none;
-      // box-shadow: none;
+    .normal-btn {
+      height: 20px;
+      padding: 0px 8px;
+      font-size: 12px;
+      display: none;
     }
   }
 }

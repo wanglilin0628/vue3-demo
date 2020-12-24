@@ -20,14 +20,15 @@
         <div class="login-btn">
           <el-button type="primary" @click="submitForm">登录</el-button>
         </div>
-        <p class="login-tips">Tips: 用户名和密码都为统一认证号</p>
+        <p class="login-tips-color" v-if="error">用户名或密码错误</p>
+        <p class="login-tips" v-else>Tips: 用户名和初始密码都为统一认证号</p>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import Axios from 'axios'
 import { useStore } from 'vuex'
 export default {
@@ -40,6 +41,7 @@ export default {
       username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
       password: [{required: true, message: '请输入密码', trigger: 'blur'}]
     })
+    const error = ref(false)
     const store = useStore()
 
     function submitForm() {
@@ -54,20 +56,25 @@ export default {
           })
           store.commit('setUserInfo', res.data)
           window.sessionStorage.setItem('userInfo', JSON.stringify({
+            username: res.data.username,
             name: res.data.name,
             department: res.data.department,
             group: res.data.group
           }))
           window.sessionStorage.setItem('needLogin', store.state.needLogin)
         }
-      }).catch((err) => {
-        console.log('登录异常:', err)
+      }).catch(() => {
+        error.value = true
+        setTimeout(() => {
+          error.value = false
+        }, 3000)
       })
     }
     return {
       params,
       rules,
-      submitForm
+      submitForm,
+      error
     }
   }
 }
@@ -111,6 +118,11 @@ export default {
           font-size: 12px;
           line-height: 30px;
           color: #ffffff;
+        }
+        .login-tips-color {
+          font-size: 12px;
+          line-height: 30px;
+          color: red;
         }
       }
     }
