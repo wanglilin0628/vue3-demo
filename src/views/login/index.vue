@@ -28,7 +28,7 @@
 
 <script>
 import { reactive } from 'vue'
-import axios from 'axios'
+import Axios from 'axios'
 import { useStore } from 'vuex'
 export default {
   setup() {
@@ -43,7 +43,7 @@ export default {
     const store = useStore()
 
     function submitForm() {
-      axios.post('/api/login', {
+      Axios.post('/api/user/login', {
         username: params.username,
         password: params.password
       }).then((res) => {

@@ -25,7 +25,6 @@ import data from '../../../public/data/menu.json'
 export default {
   name: 'async-menu',
   setup() {
-    console.log('setup')
     const { menuData, selectMenu } = useMenuData()
     return {
       menuData,
@@ -98,12 +97,13 @@ function useMenuData() {
       border-radius: 3px;
       top: 64px;
       left: 0px;
-      bottom: 0px;
+      bottom: 4px;
       width: 242px;
       z-index: 2;
       overflow: auto;
       background-color: #394551;
       transition: all .3s;
+      overflow: hidden;
       .menu-main {
         width: 100%!important;
         overflow: visible!important;

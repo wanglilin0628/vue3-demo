@@ -178,7 +178,7 @@ export default {
           font-size: 12px;
           color: #777;
           margin: auto;
-          padding: 18px 0 22px 0;
+          padding: 8px 0 0 0;
           text-align: center;
           &.is-absolute {
             position: absolute;
@@ -187,7 +187,7 @@ export default {
           }
         }
         .page-wrapper {
-          min-height: 78.29%;
+          min-height: 88.4%;
           background-color: #ffffff;
           margin: 16px;
           padding: 24px 24px 24px 24px;

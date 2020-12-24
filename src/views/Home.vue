@@ -18,7 +18,7 @@ export default {
 <style lang="scss">
 .main-detail-wrap {
   padding: 28px 0 32px 0;
-  min-height: calc(100% - 124px)!important;
+  min-height: calc(100% - 96px)!important;
   .main-detail-title {
     text-align: center;
     padding-bottom: 10px;
