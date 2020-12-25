@@ -2,10 +2,10 @@ const DataTypes = require('sequelize')
 
 module.exports = {
   created_time: { // 创建时间
-    type: DataTypes.DATE
+    type: DataTypes.STRING
   },
   update_time: { // 修改时间
-    type: DataTypes.DATE
+    type: DataTypes.STRING
   },
   username: { // 用户名
     type: DataTypes.STRING

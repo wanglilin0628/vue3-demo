@@ -1,6 +1,6 @@
 <template>
   <div class="user-wrapper page-wrapper">
-    <div class="user-list-wrapper" v-if="!opCardShow">
+    <div class="user-list-wrapper" v-if="!$store.state.opCardShow">
       <el-card>
         <el-table :data="userList" style="width: auto" :cell-class-name="getCellIndex">
           <template #empty>
@@ -37,22 +37,24 @@
 import { onUnmounted, ref } from 'vue'
 import Axios from 'axios'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 export default {
   setup() {
     const router = useRouter()
+    const store = useStore()
 
     const { userList, delUser } = useUserList()
     function deleteUser(row) {
       delUser(row, userList)
     }
 
-    const opCardShow = ref(false)
-    window.addEventListener('popstate', () => { opCardShow.value = false })
+    window.addEventListener('popstate', () => { store.commit('setOpCardShow', {flag: false}) })
     onUnmounted(() => {
-      window.removeEventListener('popstate', () => { opCardShow.value = false })
+      window.removeEventListener('popstate', () => { store.commit('setOpCardShow', {flag: false}) })
     })
+
     function navigateTo(flag, row = null) {
-      opCardShow.value = true
+      store.commit('setOpCardShow', {flag: true})
       if (flag === 'add') {
         router.push({path: '/user/add'})
       } else if (flag === 'modify') {
@@ -69,7 +71,6 @@ export default {
       userList,
       deleteUser,
       getCellIndex,
-      opCardShow,
       navigateTo
     }
   }

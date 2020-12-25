@@ -7,7 +7,8 @@ export default createStore({
     needLogin: true,
     userInfo: {
       name: ''
-    }
+    },
+    opCardShow: false
   },
   mutations: {
     setFirstMenuShow(state, payload) {
@@ -18,6 +19,9 @@ export default createStore({
     },
     setUserInfo(state, payload) {
       state.userInfo.name = payload.name
+    },
+    setOpCardShow(state, payload) {
+      state.opCardShow = payload.flag
     }
   },
   actions: {

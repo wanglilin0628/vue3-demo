@@ -30,4 +30,18 @@ router.post('/deleteUser', async (req, res) => {
   result ? res.sendStatus(200) : res.sendStatus(404)
 })
 
+/**
+ * 新增用户请求
+ */
+router.post('/add', async (req, res) => {
+  const result = await userMethod.addUser(req.body.userInfo)
+  if (result !== null && result.error) {
+    res.status(202).send(result)
+  } else if (result !== null) {
+    res.status(200).send(result)
+  } else {
+    res.sendStatus(500)
+  }
+})
+
 module.exports = router
