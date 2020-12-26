@@ -6,15 +6,17 @@ npm install
 ```
 
 ### 启动工程
-#### 1) 启动vue前端工程
-```
-vue-cli-service server
-```
-#### 2) 启动node.js后端
+
+#### 1) 先启动node.js后端(监听8080端口)
 ```
 npm run express
 // or
 node index.js
+```
+
+#### 2) 启动vue前端工程(通过devServer代理，向8080端口发送请求)
+```
+vue-cli-service server
 ```
 
 ### Compiles and minifies for production
