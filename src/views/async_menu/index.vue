@@ -21,6 +21,7 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import data from '../../../public/data/menu.json'
+import { useStore } from 'vuex'
 
 export default {
   name: 'async-menu',
@@ -41,6 +42,7 @@ export default {
 function useMenuData() {
   // 使用路由
   const router = useRouter()
+  const store = useStore()
   // 定义响应式数据menuData
   const menuData = reactive({
     retMenu: (data.result.retMenu)[0].childrens[0].childrens,
@@ -52,6 +54,7 @@ function useMenuData() {
    * @param {string} index 菜单的唯一标志
    */
   function selectMenu(index) {
+    store.commit('setOpCardShow', {flag: false})
     if (index !== 'home') {
       window.sessionStorage.setItem('default-menu', index)
       router.push({

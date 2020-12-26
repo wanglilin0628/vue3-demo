@@ -2,7 +2,7 @@
   <div class="user-wrapper page-wrapper">
     <div class="user-list-wrapper" v-if="!$store.state.opCardShow">
       <el-card>
-        <el-table :data="userList" style="width: auto" :cell-class-name="getCellIndex">
+        <el-table :data="$store.state.user.userList" style="width: auto" :cell-class-name="getCellIndex">
           <template #empty>
             <div class="no-data">
               <el-button type="primary" @click="navigateTo('add')">新增用户</el-button>
@@ -34,70 +34,62 @@
 </template>
 
 <script>
-import { onUnmounted, ref } from 'vue'
-import Axios from 'axios'
+import { onBeforeMount, onUnmounted } from 'vue'
+// import Axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { opFlags } from '../../scripts/enumClass'
+
 export default {
   setup() {
     const router = useRouter()
     const store = useStore()
 
-    const { userList, delUser } = useUserList()
-    function deleteUser(row) {
-      delUser(row, userList)
+    /** 当页面加载前, 获取用户列表 */
+    onBeforeMount(() => {
+      store.dispatch('user/getUserList')
+    })
+
+    /** 删除用户 */
+    // TODO [1.0.4] 增加删除权限, 每个用户只能对自己进行删除操作
+    async function deleteUser(row) {
+      const res = await store.dispatch('user/deleteUser', row)
+      store.dispatch('user/addUserRecord', {
+        flag: opFlags.USER_DELETE,
+        state: res,
+        remark: '删除用户 ' + row.username
+      })
     }
 
+    /** 页面刷新、回退监听器 */
     window.addEventListener('popstate', () => { store.commit('setOpCardShow', {flag: false}) })
     onUnmounted(() => {
       window.removeEventListener('popstate', () => { store.commit('setOpCardShow', {flag: false}) })
     })
 
+    /** 导航 */
     function navigateTo(flag, row = null) {
-      store.commit('setOpCardShow', {flag: true})
       if (flag === 'add') {
         router.push({path: '/user/add'})
       } else if (flag === 'modify') {
-        router.push({path: '/user/modify', params: row})
+        router.push({path: '/user/modify', name: '/user/modify', params: row})
       } else {
-        router.push({path: '/user/details', params: row})
+        router.push({path: '/user/details', name: '/user/details', params: row})
       }
+      setTimeout(() => {
+        store.commit('setOpCardShow', {flag: true})
+      }, 0)
     }
 
+    /** 为列表中的每项值都增加一个index属性, 表示在表格中的位置 */
     function getCellIndex({row, column, rowIndex, columnIndex}) {
       row.index = rowIndex
     }
     return {
-      userList,
       deleteUser,
       getCellIndex,
       navigateTo
     }
-  }
-}
-
-function useUserList() {
-  const userList = ref([])
-  Axios.post('/api/user/getUserList', {}).then((res) => {
-    userList.value = res.data
-  }).catch((e) => {
-    console.log('获取用户列表异常', e)
-  })
-
-  function delUser(row, useUserList) {
-    Axios.post('/api/user/deleteUser', {
-      username: row.username
-    }).then((res) => {
-      if (res.status === 200) {
-        useUserList.value.splice(row.index, 1)
-      }
-    }).catch((e) => {
-      console.log('用户删除失败:', e)
-    })
-  }
-  return {
-    userList,
-    delUser
   }
 }
 

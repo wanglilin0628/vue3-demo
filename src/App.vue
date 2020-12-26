@@ -56,7 +56,6 @@ export default {
       if (window.confirm('是否确认退出?')) {
         needLogin.value = true
         window.sessionStorage.clear()
-        // router.go(0)
         router.push({path: '/'})
         setTimeout(() => {
           router.go(0)
@@ -71,13 +70,6 @@ export default {
     }
   }
 }
-
-/**
- * 用户信息数据与相关逻辑
- */
-// function useUserInfo() {
-//   const userInfo = reactive
-// }
 </script>
 
 <style lang="scss">

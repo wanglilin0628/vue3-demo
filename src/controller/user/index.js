@@ -21,7 +21,8 @@ const getUser = async (username) => {
  */
 const getUserList = () => {
   const userList = Account.findAll({
-    order: ['username']
+    order: ['username'],
+    attributes: ['username', 'name', 'department', 'group']
   })
   if (userList) {
     return userList

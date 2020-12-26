@@ -1,6 +1,6 @@
 <template>
   <div class="user-add-wrapper">
-    <el-form class="user-form" :model="data.userData" ref="form" label-width="120px">
+    <el-form class="user-form" :model="data.userData" :rules="rules" ref="form" label-width="120px">
       <el-form-item label="用户名" prop="username">
         <el-input v-model="data.userData.username" placeholder="请填写统一认证号"></el-input>
       </el-form-item>
@@ -34,54 +34,104 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import Axios from 'axios'
-import { ElNotification } from 'element-plus'
+import { useNotification } from '../../../../scripts/notification'
+import { opFlags } from '../../../../scripts/enumClass'
 
 export default {
-  // TODO [1.0.2] 完成用户的新增页面
   setup() {
     const router = useRouter()
     const store = useStore()
-    // const rules = useValidate()
 
-    // 临时数据
+    // TODO 将临时数据替换为数据库
     const departmentList = reactive([{depId: '1001', name: 'xxx实验室'}, {depId: '1002', name: '技术部'}])
     const groupList = reactive([{groupId: '2101', name: '分布式开发团队'}, {groupId: '2102', name: '服务支持团队'}])
 
-    const data = reactive({userData: {}})
-    const check = ref('')
+    /** vue3.0获取dom元素的方式 */
+    const form = ref(null)
+    onMounted(() => {
+      console.log(form.value)
+    })
+    const data = reactive({userData: {}}) // 表单数据
+    const check = ref(null) // 密码检查
 
+    const {successNotification, failNotification} = useNotification()
+    /** 表单校验 */
+    const validatePass = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== data.userData.password) {
+        callback(new Error('两次输入密码不一致'))
+      } else {
+        callback()
+      }
+    }
+    const rules = {
+      password: [
+        { required: true, trigger: 'blur', message: '请输入密码' }
+      ],
+      check: [
+        { validator: validatePass, required: true, trigger: 'blur' }
+      ],
+      username: [
+        { required: true, trigger: 'blur', message: '请输入统一认证号' },
+        { min: 9, max: 9, trigger: 'blur', message: '统一认证号为9位数字, 请检查' }
+      ],
+      name: [
+        { required: true, trigger: 'blur', message: '请输入姓名' }
+      ],
+      department: [
+        { required: true, trigger: 'blur', message: '请选择部门'}
+      ],
+      group: [
+        { required: true, trigger: 'blur', message: '请选择团队'}
+      ]
+    }
+
+    /** 提交表单, 并保存记录(已添加校验规则) */
     const submit = function() {
-      Axios.post('/api/user/add', {userInfo: data.userData}).then((res) => {
-        if (res.status === 200) {
-          ElNotification.success({
-            title: '成功',
-            message: '添加用户数据成功'
-          })
-          setTimeout(() => {
-            data.userData = {}
-            check.value = ''
-            store.commit('setOpCardShow', {flag: false})
-          }, 500)
-        } else if (res.status === 202) {
-          const flag = Object.getOwnPropertyNames(res.data.error)[0]
-          const val = res.data.error[flag]
-          ElNotification.error({
-            title: '失败',
-            message: '用户名 ' + val + ' 已存在'
+      form.value.validate(async (valid) => {
+        if (valid) {
+          await store.dispatch('user/addUser', {userInfo: data.userData}).then((res) => {
+            if (res && res.status === 200) {
+              successNotification('成功', '添加用户数据成功')
+              store.dispatch('user/addUserRecord', {
+                flag: opFlags.USER_ADD,
+                state: true,
+                remark: '添加用户 ' + data.userData.username
+              })
+              data.userData = {}
+              check.value = ''
+              store.dispatch('user/getUserList')
+              store.commit('setOpCardShow', {flag: false})
+            } else if (res.status === 202) {
+              const msg = '用户名 ' + Object.values(res.data.error)[0] + ' 已存在'
+              store.dispatch('user/addUserRecord', {
+                flag: opFlags.USER_ADD,
+                state: false,
+                remark: '添加用户失败, ' + msg
+              })
+              failNotification('失败', msg)
+            }
+          }).catch((e) => {
+            console.log('新增用户失败: ', e)
+            store.dispatch('user/addUserRecord', {
+              flag: opFlags.USER_ADD,
+              state: false,
+              remark: e
+            })
           })
         }
-      }).catch((e) => {
-        console.log('新增用户失败: ', e)
       })
     }
+    /** 重置表单 */
     const reset = function() {
       data.userData = {}
       check.value = ''
     }
+    /** 取消, 并返回上一页 */
     const cancel = function() {
       data.userData = {}
       check.value = ''
@@ -90,22 +140,16 @@ export default {
     return {
       data,
       check,
+      form,
       departmentList,
       groupList,
       reset,
       cancel,
-      submit
+      submit,
+      rules
     }
   }
 }
-// function useValidate() {
-//   const rules = reactive({
-//     username: [{required: true, trigger: 'blur', message: '用户名必填'}]
-//   })
-//   return {
-//     rules
-//   }
-// }
 </script>
 
 <style lang="scss">

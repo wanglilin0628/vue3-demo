@@ -14,8 +14,8 @@ const routes = [
     meta: { title: 'User Management' },
     children: [
       { path: '/user/add', name: '/user/add', component: () => import('../views/user/modules/user_add'), meta: { title: 'userAdd', parentPath: '/user' }},
-      { path: '/modify', name: '/user/modify', component: () => import('../views/user/modules/user_modify'), meta: { title: 'userModify', parentPath: '/user' }},
-      { path: '/details', name: '/user/details', component: () => import('../views/user/modules/user_details'), meta: { title: 'userDetail', parentPath: '/user' }}
+      { path: '/user/modify', name: '/user/modify', component: () => import('../views/user/modules/user_modify'), meta: { title: 'userModify', parentPath: '/user' }},
+      { path: '/user/details', name: '/user/details', component: () => import('../views/user/modules/user_details'), meta: { title: 'userDetail', parentPath: '/user' }}
     ]
   },
   {

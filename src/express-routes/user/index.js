@@ -19,7 +19,7 @@ router.post('/login', async (req, res) => {
  */
 router.post('/getUserList', async (req, res) => {
   const userList = await userMethod.getUserList()
-  userList ? res.status(200).send(userList) : res.sendStatus(404)
+  userList ? res.status(200).send(userList) : res.sendStatus(500)
 })
 
 /**
@@ -27,7 +27,7 @@ router.post('/getUserList', async (req, res) => {
  */
 router.post('/deleteUser', async (req, res) => {
   const result = await userMethod.deleteUserByName(req.body.username)
-  result ? res.sendStatus(200) : res.sendStatus(404)
+  result ? res.sendStatus(200) : res.sendStatus(500)
 })
 
 /**

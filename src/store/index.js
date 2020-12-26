@@ -1,9 +1,9 @@
 import { createStore } from 'vuex'
+import user from '../views/user/store'
 
 export default createStore({
   state: {
     firstMenuShow: true,
-    leftCollapse: false,
     needLogin: true,
     userInfo: {
       name: ''
@@ -36,5 +36,6 @@ export default createStore({
     }
   },
   modules: {
+    user
   }
 })
