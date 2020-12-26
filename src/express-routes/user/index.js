@@ -25,7 +25,7 @@ router.post('/getUserList', async (req, res) => {
 /**
  * 删除用户请求
  */
-router.post('/deleteUser', async (req, res) => {
+router.post('/delete', async (req, res) => {
   const result = await userMethod.deleteUserByName(req.body.username)
   result ? res.sendStatus(200) : res.sendStatus(500)
 })
@@ -39,6 +39,20 @@ router.post('/add', async (req, res) => {
     res.status(202).send(result)
   } else if (result !== null) {
     res.status(200).send(result)
+  } else {
+    res.sendStatus(500)
+  }
+})
+
+/**
+ * 更新用户请求
+ */
+router.post('/update', async (req, res) => {
+  const result = await userMethod.updateUser(req.body.userInfo)
+  if (result !== null && result.status === 200) {
+    res.status(200).send(result)
+  } else if (result !== null && result.status === 203) {
+    res.sendStatus(203)
   } else {
     res.sendStatus(500)
   }

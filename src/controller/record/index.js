@@ -22,7 +22,6 @@ const getRecords = async (username) => {
  * 新增记录
  */
 const addRecord = async (payload) => {
-  console.log('payload:', payload)
   let result = null
   try {
     result = await Record.create({

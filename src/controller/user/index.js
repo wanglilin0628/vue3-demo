@@ -66,9 +66,38 @@ const addUser = async (payload) => {
   return result
 }
 
+/**
+ * 更新用户
+ */
+const updateUser = async (payload) => {
+  const result = {}
+  // 首先判断密码是否正确
+  const user = await Account.findOne({
+    where: {username: payload.username}
+  })
+  if (payload.oldPassword && payload.oldPassword === user.dataValues.password) {
+    try {
+      const count = await Account.update(payload, {
+        where: {
+          username: payload.username
+        }
+      })
+      result.status = 200
+      result.count = count[0]
+    } catch (e) {
+      console.log('更新数据时发生错误:', e)
+      result.status = 500
+    }
+  } else {
+    result.status = 203
+  }
+  return result
+}
+
 module.exports = {
   getUser,
   getUserList,
   deleteUserByName,
-  addUser
+  addUser,
+  updateUser
 }

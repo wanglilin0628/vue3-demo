@@ -6,7 +6,7 @@ export default {
   state: {
     userList: [],
     record: {
-      username: JSON.parse(window.sessionStorage.getItem('userInfo')).username,
+      username: JSON.parse(window.sessionStorage.getItem('userInfo'))?.username,
       flag: '',
       state: '',
       remark: null
@@ -36,12 +36,13 @@ export default {
         console.log('获取用户列表异常:', e)
       })
     },
+
     /**
      * 删除用户
      */
     async deleteUser({commit}, payload) {
       try {
-        const res = await Axios.post('api/user/deleteUser', {username: payload.username})
+        const res = await Axios.post('api/user/delete', {username: payload.username})
         if (res.status === 200) {
           commit('deleteUser', payload)
           return true
@@ -52,6 +53,7 @@ export default {
         return false
       }
     },
+
     /**
      * 新增用户
      */
@@ -60,10 +62,17 @@ export default {
       return res
     },
     /**
+     * 更新用户
+     */
+    async updateUser({commit}, payload) {
+      const res = await Axios.post('/api/user/update', {userInfo: payload.userInfo})
+      return res
+    },
+
+    /**
      * 新增记录
      */
     addUserRecord({commit, state}, payload) {
-      console.log(payload)
       commit('setRecord', payload)
       addRecord(state.record)
     }

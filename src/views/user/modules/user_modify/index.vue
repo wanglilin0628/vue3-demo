@@ -1,20 +1,20 @@
 <template>
   <div class="user-modify-wrapper">
-    <el-form class="user-form" :model="data.userData" ref="form" label-width="120px">
+    <el-form class="user-form" :model="data.userData" :rules="rules" ref="form" label-width="120px">
       <el-form-item label="用户名" prop="username">
         <el-input v-model="data.userData.username" placeholder="请填写统一认证号" :disabled="true"></el-input>
       </el-form-item>
       <el-form-item label="姓名" prop="name">
         <el-input v-model="data.userData.name" placeholder="请填写姓名"></el-input>
       </el-form-item>
-      <el-form-item label="原密码" prop="oldPassword">
-        <el-input type="password" v-model="data.userData.password" placeholder="请填写原密码"></el-input>
+      <el-form-item label="密码" prop="oldPassword">
+        <el-input type="password" v-model="data.userData.oldPassword" placeholder="请填写密码"></el-input>
       </el-form-item>
       <el-form-item label="新密码" prop="password">
-        <el-input type="password" v-model="data.userData.password" placeholder="请填写新密码"></el-input>
+        <el-input type="password" v-model="data.userData.password" placeholder="如果需要修改密码"></el-input>
       </el-form-item>
       <el-form-item label="确认密码" prop="check">
-        <el-input type="password" v-model="check" placeholder="请再次输入密码"></el-input>
+        <el-input type="password" v-model="check" placeholder="如果需要修改密码, 请再次填写"></el-input>
       </el-form-item>
       <el-form-item label="部门" prop="department">
         <el-select v-model="data.userData.department" placeholder="请选择部门">
@@ -27,7 +27,7 @@
         </el-select>
       </el-form-item>
       <!-- TODO [1.0.3] 修复el-select下拉框宽度过大的问题 -->
-      <el-form-item class="user-add-button">
+      <el-form-item class="user-modify-button">
         <el-button type="primary" class="confirm" @click="submit">提交</el-button>
         <el-button type="info" class="reset" @click="reset">重置</el-button>
         <el-button class="cancel" @click="cancel">取消</el-button>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { useNotification } from '../../../../scripts/notification'
@@ -48,12 +48,18 @@ export default {
     const router = useRouter()
     const store = useStore()
     const route = useRoute()
-    // const rules = useValidate()
 
     // TODO 将临时数据替换为数据库
     const departmentList = reactive([{depId: '1001', name: 'xxx实验室'}, {depId: '1002', name: '技术部'}])
     const groupList = reactive([{groupId: '2101', name: '分布式开发团队'}, {groupId: '2102', name: '服务支持团队'}])
 
+    /** vue3.0获取dom元素的方式 */
+    const form = ref(null)
+    onMounted(() => {
+      console.log(form.value)
+    })
+
+    /** 表单数据 */
     const data = reactive({
       userData: {
         username: route.params.username,
@@ -61,41 +67,76 @@ export default {
         department: route.params.department,
         group: route.params.group
       }
-    }) // 表单数据
-    const check = ref('') // 密码检查
-    const oldPassword = ref('')
+    })
+    const check = ref('')
+    const { successNotification, failNotification } = useNotification()
 
-    const {successNotification, failNotification} = useNotification()
-    /** 提交表单, 并保存记录 */
-    const submit = async function() {
-      await store.dispatch('user/addUser', {userInfo: data.userData}).then((res) => {
-        if (res && res.status === 200) {
-          successNotification('成功', '添加用户数据成功')
-          store.dispatch('user/addUserRecord', {
-            flag: opFlags.USER_ADD,
-            state: true,
-            remark: '添加用户 ' + data.userData.username
+    /** 表单校验 */
+    const validatePass = (rule, value, callback) => {
+      if (!check.value && data.userData.password) {
+        callback(new Error('请再次输入密码'))
+      } else if (data.userData.password && check.value !== data.userData.password) {
+        callback(new Error('两次输入密码不一致'))
+      } else {
+        callback()
+      }
+    }
+    const rules = {
+      oldPassword: [
+        { required: true, trigger: 'blur', message: '请输入原密码'}
+      ],
+      password: [
+        { required: false, trigger: 'blur', message: '请输入密码' }
+      ],
+      check: [
+        { validator: validatePass, required: false, trigger: 'blur' }
+      ],
+      name: [
+        { required: true, trigger: 'blur', message: '请输入姓名' }
+      ],
+      department: [
+        { required: true, trigger: 'blur', message: '请选择部门'}
+      ],
+      group: [
+        { required: true, trigger: 'blur', message: '请选择团队'}
+      ]
+    }
+
+    /** 提交表单, 并保存记录(已添加校验规则) */
+    const submit = function() {
+      form.value.validate(async (valid) => {
+        if (valid) {
+          await store.dispatch('user/updateUser', {userInfo: data.userData}).then((res) => {
+            if (res && res.status === 200) {
+              const msg = res.count ? '更新用户数据成功' : '输入内容与原数据一致, 未更改'
+              successNotification('成功', msg)
+              store.dispatch('user/addUserRecord', {
+                flag: opFlags.USER_MODIFY,
+                state: true,
+                remark: '修改用户 ' + data.userData.username
+              })
+              data.userData = {}
+              check.value = ''
+              store.dispatch('user/getUserList')
+              store.commit('setOpCardShow', {flag: false})
+            } else if (res.status === 203) {
+              const msg = '请确认密码是否输入正确'
+              store.dispatch('user/addUserRecord', {
+                flag: opFlags.USER_MODIFY,
+                state: false,
+                remark: '密码错误'
+              })
+              failNotification('失败', msg)
+            }
+          }).catch((e) => {
+            console.log('更新用户失败: ', e)
+            store.dispatch('user/addUserRecord', {
+              flag: opFlags.USER_MODIFY,
+              state: false,
+              remark: e
+            })
           })
-          data.userData = {}
-          check.value = ''
-          store.dispatch('user/getUserList')
-          store.commit('setOpCardShow', {flag: false})
-        } else if (res.status === 202) {
-          const msg = '用户名 ' + Object.values(res.data.error)[0] + ' 已存在'
-          store.dispatch('user/addUserRecord', {
-            flag: opFlags.USER_ADD,
-            state: false,
-            remark: '添加用户失败, ' + msg
-          })
-          failNotification('失败', msg)
         }
-      }).catch((e) => {
-        console.log('新增用户失败: ', e)
-        store.dispatch('user/addUserRecord', {
-          flag: opFlags.USER_ADD,
-          state: false,
-          remark: e
-        })
       })
     }
     /** 重置表单 */
@@ -112,23 +153,16 @@ export default {
     return {
       data,
       check,
-      oldPassword,
+      form,
       departmentList,
       groupList,
       reset,
       cancel,
-      submit
+      submit,
+      rules
     }
   }
 }
-// function useValidate() {
-//   const rules = reactive({
-//     username: [{required: true, trigger: 'blur', message: '用户名必填'}]
-//   })
-//   return {
-//     rules
-//   }
-// }
 </script>
 
 <style lang="scss">
@@ -144,7 +178,7 @@ export default {
       width: 60%;
     }
   }
-  .user-add-button {
+  .user-modify-button {
     margin-top: 15px;
     .cancel, .reset, .confirm {
       margin: 0 10px 0px 10px;

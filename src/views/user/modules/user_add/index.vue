@@ -55,20 +55,21 @@ export default {
       console.log(form.value)
     })
     const data = reactive({userData: {}}) // 表单数据
-    const check = ref(null) // 密码检查
+    const check = ref('') // 密码检查
 
-    const {successNotification, failNotification} = useNotification()
+    const { successNotification, failNotification } = useNotification()
+
     /** 表单校验 */
     const validatePass = (rule, value, callback) => {
-      if (!value) {
+      if (!check.value) {
         callback(new Error('请再次输入密码'))
-      } else if (value !== data.userData.password) {
+      } else if (check.value !== data.userData.password) {
         callback(new Error('两次输入密码不一致'))
       } else {
         callback()
       }
     }
-    const rules = {
+    const rules = reactive({
       password: [
         { required: true, trigger: 'blur', message: '请输入密码' }
       ],
@@ -88,7 +89,7 @@ export default {
       group: [
         { required: true, trigger: 'blur', message: '请选择团队'}
       ]
-    }
+    })
 
     /** 提交表单, 并保存记录(已添加校验规则) */
     const submit = function() {
