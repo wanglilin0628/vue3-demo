@@ -16,7 +16,7 @@
     </el-form>
     <div class="user-record-wrapper">
       <el-table ref="recordTable" :data="currentRecordList(currentPage, pageSize)" :height="520" border style="width: 100%">
-        <el-table-column label="操作时间" prop="op_time"></el-table-column>
+        <el-table-column label="操作时间" prop="op_time" sortable></el-table-column>
         <el-table-column label="操作人" prop="username"></el-table-column>
         <el-table-column label="操作类型" prop="op_flag" :formatter="handleFlag"></el-table-column>
         <el-table-column label="状态" prop="op_state" :formatter="handleState"></el-table-column>
