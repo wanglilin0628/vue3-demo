@@ -13,7 +13,7 @@ const getRecords = async (username) => {
     where: {
       username: username
     },
-    order: ['op_time', 'DESC']
+    order: [['op_time', 'DESC']]
   })
   return recordList || null
 }

@@ -111,9 +111,9 @@ export default {
               const msg = res.count ? '更新用户数据成功' : '输入内容与原数据一致, 未更改'
               successNotification('成功', msg)
               store.dispatch('user/addUserRecord', {
-                flag: opFlags.USER_MODIFY,
+                flag: opFlags.USER_MODIFY.code,
                 state: true,
-                remark: '修改用户 ' + data.userData.username
+                remark: opFlags.USER_MODIFY.msg + data.userData.username
               })
               data.userData = {}
               check.value = ''
@@ -122,7 +122,7 @@ export default {
             } else if (res.status === 203) {
               const msg = '请确认密码是否输入正确'
               store.dispatch('user/addUserRecord', {
-                flag: opFlags.USER_MODIFY,
+                flag: opFlags.USER_MODIFY.code,
                 state: false,
                 remark: '密码错误'
               })
@@ -131,9 +131,9 @@ export default {
           }).catch((e) => {
             console.log('更新用户失败: ', e)
             store.dispatch('user/addUserRecord', {
-              flag: opFlags.USER_MODIFY,
+              flag: opFlags.USER_MODIFY.code,
               state: false,
-              remark: e
+              remark: '更新用户失败: ' + e.toString()
             })
           })
         }

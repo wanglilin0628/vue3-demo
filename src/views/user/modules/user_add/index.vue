@@ -99,9 +99,9 @@ export default {
             if (res && res.status === 200) {
               successNotification('成功', '添加用户数据成功')
               store.dispatch('user/addUserRecord', {
-                flag: opFlags.USER_ADD,
+                flag: opFlags.USER_ADD.code,
                 state: true,
-                remark: '添加用户 ' + data.userData.username
+                remark: opFlags.USER_ADD.msg + data.userData.username
               })
               data.userData = {}
               check.value = ''
@@ -110,18 +110,18 @@ export default {
             } else if (res.status === 202) {
               const msg = '用户名 ' + Object.values(res.data.error)[0] + ' 已存在'
               store.dispatch('user/addUserRecord', {
-                flag: opFlags.USER_ADD,
+                flag: opFlags.USER_ADD.code,
                 state: false,
-                remark: '添加用户失败, ' + msg
+                remark: msg
               })
               failNotification('失败', msg)
             }
           }).catch((e) => {
             console.log('新增用户失败: ', e)
             store.dispatch('user/addUserRecord', {
-              flag: opFlags.USER_ADD,
+              flag: opFlags.USER_ADD.code,
               state: false,
-              remark: e
+              remark: '用户新增失败: ' + e.toString()
             })
           })
         }

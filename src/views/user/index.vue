@@ -55,9 +55,9 @@ export default {
     async function deleteUser(row) {
       const res = await store.dispatch('user/deleteUser', row)
       store.dispatch('user/addUserRecord', {
-        flag: opFlags.USER_DELETE,
+        flag: opFlags.USER_DELETE.code,
         state: res,
-        remark: '删除用户 ' + row.username
+        remark: opFlags.USER_DELETE.msg + row.username
       })
     }
 

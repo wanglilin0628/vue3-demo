@@ -6,8 +6,8 @@ const router = express.Router()
  * 获取记录列表
  */
 router.post('/getRecordList', async (req, res) => {
-  const recordList = await recordMethod.getRecords()
-  recordList ? res.status(200).send(recordList) : res.send(500)
+  const result = await recordMethod.getRecords(req.body.username)
+  result ? res.status(200).send({recordList: result}) : res.send(500)
 })
 
 /**
