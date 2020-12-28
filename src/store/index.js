@@ -37,5 +37,6 @@ export default createStore({
   },
   modules: {
     user
-  }
+  },
+  devtools: true
 })

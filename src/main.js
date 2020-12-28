@@ -8,10 +8,11 @@ import locale from 'element-plus/lib/locale/lang/zh-cn'
 
 const app = createApp(App)
 
-if ('__VUE_DEVTOOLS_GLOBAL_HOOK__' in window) {
-  window.__VUE_DEVTOOLS_GLOBAL_HOOK__.Vue = app
-}
-
 app.config.devtools = true
+app.config.performance = true
+
+// if ('__VUE_DEVTOOLS_GLOBAL_HOOK__' in window) {
+//   window.__VUE_DEVTOOLS_GLOBAL_HOOK__.Vue = app
+// }
 
 app.use(store).use(router).use(ElementPlus, {locale}).mount('#app')

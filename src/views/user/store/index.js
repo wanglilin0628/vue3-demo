@@ -6,7 +6,7 @@ export default {
   state: {
     userList: [],
     record: {
-      username: JSON.parse(window.sessionStorage.getItem('userInfo'))?.username,
+      username: '',
       flag: '',
       state: '',
       remark: null
@@ -20,6 +20,7 @@ export default {
       state.userList.splice(payload.index, 1)
     },
     setRecord(state, payload) {
+      state.record.username = JSON.parse(window.sessionStorage.getItem('userInfo'))?.username
       state.record.flag = payload.flag
       state.record.state = payload.state
       state.record.remark = payload.remark
@@ -76,5 +77,6 @@ export default {
       commit('setRecord', payload)
       addRecord(state.record)
     }
-  }
+  },
+  devtools: true
 }
