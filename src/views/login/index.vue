@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import Axios from 'axios'
 import { useStore } from 'vuex'
 export default {
@@ -43,6 +43,12 @@ export default {
     })
     const error = ref(false)
     const store = useStore()
+
+    onMounted(() => {
+      params.username = '001228619'
+      params.password = '123'
+      submitForm()
+    })
 
     function submitForm() {
       Axios.post('/api/user/login', {
