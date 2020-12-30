@@ -1,8 +1,9 @@
 <template>
 <!-- <login></login> -->
   <div class="top-wrapper">
-    <login v-if="needLogin"></login>
-    <div v-else class="main-wrapper">
+    <!-- <login v-if="needLogin"></login> -->
+    <!-- <div v-else class="main-wrapper"> -->
+    <div class="main-wrapper">
       <header class="main-header">
         <!-- logo区域 -->
         <div class="main-logo-area">
@@ -30,21 +31,44 @@
 
 <script>
 import AsyncMenu from '@/views/async_menu'
-import Login from '@/views/login'
+// import Login from '@/views/login'
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import Axios from 'axios'
 
 export default {
   name: '',
   components: {
-    AsyncMenu,
-    Login
+    AsyncMenu
+    // Login
   },
   setup() {
     const store = useStore()
     const router = useRouter()
     const title = ref('Vue3-demo')
+
+    // TODO 临时新增登录, 后面删除
+    Axios.post('/api/user/login', {
+      username: '001228619',
+      password: '123'
+    }).then((res) => {
+      if (res.status === 200) {
+        store.commit('setNeedLogin', {
+          flag: false
+        })
+        store.commit('setUserInfo', res.data)
+        window.sessionStorage.setItem('userInfo', JSON.stringify({
+          username: res.data.username,
+          name: res.data.name,
+          department: res.data.department,
+          group: res.data.group
+        }))
+        window.sessionStorage.setItem('needLogin', store.state.needLogin)
+      }
+    }).catch((e) => {
+      console.log(e)
+    })
 
     if (window.sessionStorage.getItem('needLogin') === 'false') {
       store.dispatch('getUserInfo', window.sessionStorage.getItem('userInfo'))
