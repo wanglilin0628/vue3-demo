@@ -16,7 +16,7 @@ export default {
 
 <style lang="scss">
 .dashboard-wrapper {
-  padding: 17px 20px 17px 20px;
+  padding: 17px 17px 17px 17px;
   min-height: calc(100% - 96px)!important;
 }
 </style>

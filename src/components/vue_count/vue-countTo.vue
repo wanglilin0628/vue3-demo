@@ -98,6 +98,7 @@ export default {
     }
   },
   mounted() {
+    console.log('vue-countTo.vue')
     if (this.autoplay) {
       this.start()
     }

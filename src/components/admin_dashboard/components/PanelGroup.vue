@@ -6,7 +6,7 @@
           <i class="el-icon-user card-panel-icon"></i>
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Visits</div>
+          <div class="card-panel-text">Visitors</div>
           <count-to :start-val="0" :end-val="102400" :duraction="2600" class="card-panel-num"></count-to>
         </div>
       </div>
@@ -25,18 +25,18 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('TASK')">
         <div class="card-panel-icon-wrapper icon-task">
-          <i class="el-icon-message card-panel-icon"></i>
+          <i class="el-icon-s-order card-panel-icon"></i>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">Task</div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num"></count-to>
+          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num"></count-to>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('')">
+      <div class="card-panel" @click="handleSetLineChartData('RECORD')">
         <div class="card-panel-icon-wrapper icon-record">
-          <i class="el-icon-message card-panel-icon"></i>
+          <i class="el-icon-s-data card-panel-icon"></i>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">Record</div>
@@ -53,19 +53,24 @@ export default {
   components: {
     CountTo
   },
-  setup() {}
+  setup(props, { emit }) {
+    const handleSetLineChartData = function(type) {
+      emit('handleSetLineChartData', type)
+    }
+    return {
+      handleSetLineChartData
+    }
+  }
 }
 </script>
 
 <style lang='scss'>
 .panel-group {
-  margin-top: 12px;
+  margin: 12px 0 0 0;
   .card-panel-col {
-    margin-left: 12px;
     margin-bottom: 12px;
   }
   .card-panel {
-    width: 200px;
     height: 108px;
     cursor: pointer;
     font-size: 12px;
@@ -83,24 +88,41 @@ export default {
       .icon-people {
         background: #40c9c6;
       }
-      .card-icon-panel {
-        // float: left;
-        font-size: 48px;
+      .icon-message {
+        background: #36a3f7;
+      }
+      .icon-task {
+        background: #f4516c;
+      }
+      .icon-record {
+        background: #34bfa3;
       }
     }
     .icon-people {
       color: #40c9c6;
     }
+    .icon-message {
+      color: #36a3f7;
+    }
+    .icon-task {
+      color: #f4516c;
+    }
+    .icon-record {
+      color: #34bfa3;
+    }
     .card-panel-icon-wrapper {
-      // float: left;
+      float: left;
       margin: 14px 0 0 14px;
-      padding: 10px;
-      font-size: 40px;
+      padding: 16px;
       transition: all 0.38s ease-out;
-      border-radius: 8px;
+      border-radius: 6px;
+    }
+    .card-panel-icon {
+      float: left;
+      font-size: 48px;
     }
     .card-panel-description {
-      // float: right;
+      float: right;
       font-weight: bold;
       margin: 26px;
       margin-left: 0px;
@@ -118,14 +140,14 @@ export default {
     display: none;
   }
   .card-panel-icon-wrapper {
-    // float: none!important;
+    float: none!important;
     width: 100%;
     height: 100%;
     margin: 0!important;
     .card-panel-icon {
       display: block;
       margin: 14px auto !important;
-      // float: none!important;
+      float: none!important;
     }
   }
 }

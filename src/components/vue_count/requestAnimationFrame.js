@@ -7,16 +7,18 @@ let cancelAnimationFrame
 const isServer = typeof window === 'undefined'
 if (isServer) {
   requestAnimationFrame = function() {
+    // eslint-disable-next-line no-useless-return
     return
   }
   cancelAnimationFrame = function() {
+    // eslint-disable-next-line no-useless-return
     return
   }
 } else {
   requestAnimationFrame = window.requestAnimationFrame
   cancelAnimationFrame = window.cancelAnimationFrame
   let prefix
-    // 通过遍历各浏览器前缀，来得到requestAnimationFrame和cancelAnimationFrame在当前浏览器的实现形式
+  // 通过遍历各浏览器前缀，来得到requestAnimationFrame和cancelAnimationFrame在当前浏览器的实现形式
   for (let i = 0; i < prefixes.length; i++) {
     if (requestAnimationFrame && cancelAnimationFrame) { break }
     prefix = prefixes[i]
@@ -31,6 +33,7 @@ if (isServer) {
       // 为了使setTimteout的尽可能的接近每秒60帧的效果
       const timeToCall = Math.max(0, 16 - (currTime - lastTime))
       const id = window.setTimeout(() => {
+        // eslint-disable-next-line standard/no-callback-literal
         callback(currTime + timeToCall)
       }, timeToCall)
       lastTime = currTime + timeToCall
