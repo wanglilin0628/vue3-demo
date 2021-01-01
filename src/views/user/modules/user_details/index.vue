@@ -72,6 +72,8 @@ export default {
       total.value = recordList.value.length
     })
     /** 分页处理逻辑 */
+    // TODO [1.0.3] 将前台分页改为后台分页, 优化查询性能
+    // TODO [1.1.0] 增加搜索功能(条件查询)
     const handleSizeChange = function(val) {
       pageSize.value = val
       currentPage.value = 1
