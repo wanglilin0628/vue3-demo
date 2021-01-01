@@ -12,6 +12,9 @@ export default {
     const myCharts = function() {
       const myChart = init(document.getElementById('scatter'))
       const option = {
+        title: {
+          text: '散点图'
+        },
         xAxis: {
           scale: true
         },

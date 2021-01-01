@@ -24,7 +24,9 @@
     </el-row>
 
     <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" class="transaction-table"></el-col>
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" class="transaction-table">
+        <transaction-table></transaction-table>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -36,6 +38,7 @@ import LineChart from './components/LineChart'
 import RadarChart from './components/RadarChart'
 import PieChart from './components/PieChart'
 import ScatterChart from './components/ScatterChart'
+import TransactionTable from './components/TransactionTable'
 
 export default {
   name: 'adminDashboard',
@@ -44,7 +47,8 @@ export default {
     LineChart,
     RadarChart,
     PieChart,
-    ScatterChart
+    ScatterChart,
+    TransactionTable
   },
   setup() {
     const { data } = useData()
