@@ -1,5 +1,5 @@
 const config = {
-  database: 'ctp6demo',
+  database: 'demo',
   username: 'root',
   password: '1234',
   host: '127.0.0.1',
