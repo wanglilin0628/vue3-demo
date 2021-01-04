@@ -27,6 +27,9 @@
       <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" class="transaction-table">
         <transaction-table></transaction-table>
       </el-col>
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" class="input-form">
+        <input-form></input-form>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -39,6 +42,7 @@ import RadarChart from './components/RadarChart'
 import PieChart from './components/PieChart'
 import ScatterChart from './components/ScatterChart'
 import TransactionTable from './components/TransactionTable'
+import InputForm from './components/InputForm.vue'
 
 export default {
   name: 'adminDashboard',
@@ -48,7 +52,8 @@ export default {
     RadarChart,
     PieChart,
     ScatterChart,
-    TransactionTable
+    TransactionTable,
+    InputForm
   },
   setup() {
     const { data } = useData()
@@ -107,6 +112,11 @@ function useData() {
   .transaction-table {
     padding-right: 8px;
     margin-bottom: 30px;
+  }
+  .input-form {
+    padding-left: 8px;
+    margin-bottom: 30px;
+    background-color: #fff;
   }
 }
 </style>
