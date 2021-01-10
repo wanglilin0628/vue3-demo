@@ -1,15 +1,18 @@
 <template>
   <div class="dashboard-wrapper">
-    <admin-dashboard></admin-dashboard>
+    <!-- <admin-dashboard></admin-dashboard> -->
+    <home-page></home-page>
   </div>
 </template>
 
 <script>
-import adminDashboard from '../components/admin_dashboard'
+// import adminDashboard from '../components/admin_dashboard'
+import HomePage from '../components/home_page'
 export default {
   name: 'home',
   components: {
-    adminDashboard
+    // adminDashboard
+    HomePage
   }
 }
 </script>

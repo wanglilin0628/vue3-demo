@@ -5,13 +5,13 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "start": "serve -s dist",
     "lint": "vue-cli-service lint",
     "express": "nodemon index.js"
   },
   "dependencies": {
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
-    "echarts": "^5.0.0",
     "element-plus": "^1.0.1-beta.8",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
@@ -19,7 +19,7 @@
     "mysql2": "^2.2.5",
     "nodemon": "^2.0.6",
     "sequelize": "^6.3.5",
-    "vue": "^3.0.0",
+    "vue": "^3.0.5",
     "vue-i18n": "^9.0.0-beta.16",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
