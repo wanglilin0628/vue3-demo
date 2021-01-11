@@ -39,7 +39,7 @@
                 @change="handleItemChange"
                 @select="handleItemSelect"
                 :fetch-suggestions="queryItem"
-                select-when-unmatched="true"
+                :select-when-unmatched="true"
                 class="autocomplete-item"
                 clearable
                 size="small"
@@ -51,7 +51,7 @@
                 v-model="data.searchForm.subItem"
                 placeholder="请输入需求子条目"
                 :fetch-suggestions="querySubItem"
-                select-when-unmatched="false"
+                :select-when-unmatched="true"
                 class="autocomplete-subItem"
                 clearable
                 size="small"
@@ -113,7 +113,7 @@
           </el-row>
         </el-collapse-item>
         <el-collapse-item name="result" title="结果区域" class="collapse-item">
-          <el-table :data="currentList(currentPage, pageSize)" class="table-wrapper">
+          <el-table :data="currentList(currentPage, pageSize)" class="table-wrapper" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55px;"></el-table-column>
             <el-table-column label="问题类型" prop="type" width="110px;"></el-table-column>
             <el-table-column label="整体管理任务分类" prop="class"></el-table-column>
@@ -127,8 +127,8 @@
             <el-table-column label="负责小组" prop="team" width="110px;"></el-table-column>
             <el-table-column label="版本计划" prop="version" width="110px;"></el-table-column>
             <el-table-column label="应用简称" prop="app"></el-table-column>
-            <el-table-column label="中心项目编号" prop="appCode" width="110px;" resizable></el-table-column>
-            <el-table-column label="中心项目名称" prop="appName" width="220px;" resizable></el-table-column>
+            <el-table-column label="中心项目编号" prop="appCode" width="110px;"></el-table-column>
+            <el-table-column label="中心项目名称" prop="appName" width="220px;"></el-table-column>
             <el-table-column label="经办人" prop="operator"></el-table-column>
             <el-table-column label="负责人员" prop="user" fixed></el-table-column>
             <el-table-column label="计划开始时间" prop="timeStart" width="110px;" fixed></el-table-column>
@@ -146,6 +146,30 @@
             @size-change="handleSizeChange"
             layout="total, sizes, prev, pager, next, jumper">
           </el-pagination>
+          <el-table :data="selectedData" v-show="false">
+            <el-table-column type="selection" width="55px;"></el-table-column>
+            <el-table-column label="问题类型" prop="type" width="110px;"></el-table-column>
+            <el-table-column label="整体管理任务分类" prop="class"></el-table-column>
+            <el-table-column label="工作小类" prop="subClass"></el-table-column>
+            <el-table-column label="自动化测试类型" prop="testType"></el-table-column>
+            <el-table-column label="工作分类(自动化测试用)" prop="workType"></el-table-column>
+            <el-table-column label="主题" prop="theme" width="220px;"></el-table-column>
+            <el-table-column label="描述" prop="description" width="220px;"></el-table-column>
+            <el-table-column label="部门" prop="department" width="110px;"></el-table-column>
+            <el-table-column label="团队" prop="group" width="110px;"></el-table-column>
+            <el-table-column label="负责小组" prop="team" width="110px;"></el-table-column>
+            <el-table-column label="版本计划" prop="version" width="110px;"></el-table-column>
+            <el-table-column label="应用简称" prop="app"></el-table-column>
+            <el-table-column label="中心项目编号" prop="appCode" width="110px;"></el-table-column>
+            <el-table-column label="中心项目名称" prop="appName" width="220px;"></el-table-column>
+            <el-table-column label="经办人" prop="operator"></el-table-column>
+            <el-table-column label="负责人员" prop="user"></el-table-column>
+            <el-table-column label="计划开始时间" prop="timeStart" width="110px;"></el-table-column>
+            <el-table-column label="计划完成时间" prop="timeEnd" width="110px;"></el-table-column>
+            <el-table-column label="工作量" prop="workload"></el-table-column>
+            <el-table-column label="需求项编号" prop="item" width="110px;"></el-table-column>
+            <el-table-column label="需求子条目编号" prop="subItem" width="110px"></el-table-column>
+          </el-table>
         </el-collapse-item>
       </el-collapse>
     </el-col>
@@ -305,6 +329,14 @@ export default {
     const currentList = function(currentPage, pageSize) {
       return dataList.value.slice((currentPage - 1) * pageSize, currentPage * pageSize)
     }
+    /** 选中的数据 */
+    const selectedData = ref([])
+    const handleSelectionChange = (val) => {
+      // console.log(val[0])
+      for (let i = 0; i < val.length; i++) {
+        // selectedData.value[i] = val[i]
+      }
+    }
     return {
       activeNames,
       data,
@@ -331,7 +363,9 @@ export default {
       handleSizeChange,
       handleCurrentChange,
       currentPage,
-      pageSize
+      pageSize,
+      handleSelectionChange,
+      selectedData
     }
   }
 }
@@ -346,6 +380,15 @@ function useDataFilter(arr, keyName, val) {
     return item[keyName] === val
   })
 }
+/**
+ * 将数据导出为excel
+ * @param Array data 原始数据
+ * @param String path 保存路径
+ *
+*/
+// function exportData(data, path) {
+
+// }
 </script>
 
 <style lang="scss">
