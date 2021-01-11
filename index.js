@@ -1,6 +1,6 @@
 const express = require('express')
 const parser = require('body-parser')
-const user = require('./src/express-routes/user')
+const user = require('./src/express-routes/user') 
 const record = require('./src/express-routes/record')
 
 const app = express()
