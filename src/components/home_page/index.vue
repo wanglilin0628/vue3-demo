@@ -103,32 +103,29 @@
             </el-col>
           </el-row>
         </el-collapse-item>
-        <el-collapse-item name="operation" title="操作区域" class="collapse-item">
-          <el-row :gutter="20" class="operation-item">
-            <!-- 操作区域 -->
-            <el-col :span="6">操作1</el-col>
-            <el-col :span="6">操作2</el-col>
-            <el-col :span="6">操作3</el-col>
-            <el-col :span="6">操作4</el-col>
-          </el-row>
-        </el-collapse-item>
         <el-collapse-item name="result" title="结果区域" class="collapse-item">
-          <el-table :data="currentList(currentPage, pageSize)" class="table-wrapper" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55px;"></el-table-column>
-            <el-table-column label="问题类型" prop="type" width="110px;"></el-table-column>
-            <el-table-column label="整体管理任务分类" prop="class"></el-table-column>
+          <el-row class="result-item">
+            <!-- 表格操作区域 -->
+            <el-button type="primary" size="small" @click="clearSelection">清空选中</el-button>
+            <el-button type="primary" size="small" @click="exportDataSelect">导出选中数据</el-button>
+            <el-button type="success" size="small" @click="exportDataAll">全量导出数据</el-button>
+          </el-row>
+          <el-table :data="currentList(currentPage, pageSize)" class="table-wrapper" @selection-change="handleSelectionChange" row-key="id">
+            <el-table-column type="selection" width="55px;" :reserve-selection="true"></el-table-column>
+            <el-table-column label="问题类型" prop="type" show-overflow-tooltip></el-table-column>
+            <el-table-column label="任务分类" prop="class"></el-table-column>
             <el-table-column label="工作小类" prop="subClass"></el-table-column>
-            <el-table-column label="自动化测试类型" prop="testType"></el-table-column>
-            <el-table-column label="工作分类(自动化测试用)" prop="workType"></el-table-column>
-            <el-table-column label="主题" prop="theme" width="220px;"></el-table-column>
-            <el-table-column label="描述" prop="description" width="220px;"></el-table-column>
-            <el-table-column label="部门" prop="department" width="110px;"></el-table-column>
-            <el-table-column label="团队" prop="group" width="110px;"></el-table-column>
-            <el-table-column label="负责小组" prop="team" width="110px;"></el-table-column>
+            <el-table-column label="测试类型" prop="testType"></el-table-column>
+            <el-table-column label="工作分类" prop="workType"></el-table-column>
+            <el-table-column label="主题" prop="theme" show-overflow-tooltip></el-table-column>
+            <el-table-column label="描述" prop="description" show-overflow-tooltip></el-table-column>
+            <el-table-column label="部门" prop="department" show-overflow-tooltip></el-table-column>
+            <el-table-column label="团队" prop="group" show-overflow-tooltip></el-table-column>
+            <el-table-column label="负责小组" prop="team" show-overflow-tooltip></el-table-column>
             <el-table-column label="版本计划" prop="version" width="110px;"></el-table-column>
             <el-table-column label="应用简称" prop="app"></el-table-column>
-            <el-table-column label="中心项目编号" prop="appCode" width="110px;"></el-table-column>
-            <el-table-column label="中心项目名称" prop="appName" width="220px;"></el-table-column>
+            <el-table-column label="中心项目编号" prop="appCode" show-overflow-tooltip width="110px;"></el-table-column>
+            <el-table-column label="中心项目名称" prop="appName" show-overflow-tooltip width="110px;"></el-table-column>
             <el-table-column label="经办人" prop="operator"></el-table-column>
             <el-table-column label="负责人员" prop="user" fixed></el-table-column>
             <el-table-column label="计划开始时间" prop="timeStart" width="110px;" fixed></el-table-column>
@@ -146,15 +143,14 @@
             @size-change="handleSizeChange"
             layout="total, sizes, prev, pager, next, jumper">
           </el-pagination>
-          <el-table :data="selectedData" v-show="false">
-            <el-table-column type="selection" width="55px;"></el-table-column>
+          <el-table :data="selectedData" v-show="isShow" id="data-select">
             <el-table-column label="问题类型" prop="type" width="110px;"></el-table-column>
             <el-table-column label="整体管理任务分类" prop="class"></el-table-column>
             <el-table-column label="工作小类" prop="subClass"></el-table-column>
             <el-table-column label="自动化测试类型" prop="testType"></el-table-column>
             <el-table-column label="工作分类(自动化测试用)" prop="workType"></el-table-column>
             <el-table-column label="主题" prop="theme" width="220px;"></el-table-column>
-            <el-table-column label="描述" prop="description" width="220px;"></el-table-column>
+            <el-table-column label="描述" prop="description"></el-table-column>
             <el-table-column label="部门" prop="department" width="110px;"></el-table-column>
             <el-table-column label="团队" prop="group" width="110px;"></el-table-column>
             <el-table-column label="负责小组" prop="team" width="110px;"></el-table-column>
@@ -171,13 +167,34 @@
             <el-table-column label="需求子条目编号" prop="subItem" width="110px"></el-table-column>
           </el-table>
         </el-collapse-item>
+        <el-collapse-item name="operation" title="操作区域" class="collapse-item">
+          <el-row :gutter="20" class="operation-item">
+            <!-- 操作区域 -->
+            <el-col :span="6">
+              <el-row>
+                <el-button type="primary" size="small">按周汇总</el-button>
+                <el-button type="primary" size="small">按月汇总</el-button>
+              </el-row>
+              <el-row>
+                <el-table :data="">
+                  <el-table-column label=""></el-table-column>
+                </el-table>
+              </el-row>
+            </el-col>
+            <el-col :span="6">操作2</el-col>
+            <el-col :span="6">操作3</el-col>
+            <el-col :span="6">操作4</el-col>
+          </el-row>
+        </el-collapse-item>
       </el-collapse>
     </el-col>
   </el-row>
 </template>
 
 <script>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue'
+import fileSaver from 'file-saver'
+import XLSX from 'xlsx'
 export default {
   setup() {
     const activeNames = ref(['result'])
@@ -295,24 +312,24 @@ export default {
     /** 表格数据 */
     const dataList = ref([
       {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
-      {id: '100001', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''}
+      {id: '100002', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100003', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100004', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100005', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100006', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100007', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100008', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100009', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100010', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100011', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100012', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100013', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100014', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100015', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100016', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100017', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100018', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''},
+      {id: '100019', type: '整体管理任务', class: '问题修改', subClass: '问题修改', testType: '不涉及', workType: '不涉及', theme: 'vue3-demo', description: '描述1', department: 'xxx实验室', group: 'xxx团队', team: 'xxx团队', version: '2021年1月版', app: 'F-CTP', appCode: 'S100001', appName: 'xxx应用', operator: '王立林', user: '王立林', timeStart: '2021/01/11', timeEnd: '2021/01/12', workload: '1', item: 'S1002', subItem: 'S10101', module: ''}
     ])
     /** 分页数据 */
     const total = computed(() => dataList.value.length)
@@ -330,13 +347,52 @@ export default {
       return dataList.value.slice((currentPage - 1) * pageSize, currentPage * pageSize)
     }
     /** 选中的数据 */
+    const isShow = ref(false)
     const selectedData = ref([])
     const handleSelectionChange = (val) => {
-      // console.log(val[0])
-      for (let i = 0; i < val.length; i++) {
-        // selectedData.value[i] = val[i]
+      selectedData.value = val
+    }
+    const { ctx } = getCurrentInstance()
+    /** 清空选中 */
+    const clearSelection = () => {
+      ctx.$refs.data.clearSelection()
+      selectedData.value = []
+    }
+    /** 导出选中数据 */
+    const exportDataSelect = () => {
+      const wb = XLSX.utils.table_to_book(document.querySelector('#data-select'), { raw: true })
+      /** 获取二进制字符串作为输出 */
+      const wbout = XLSX.write(wb, {
+        bookType: 'xlsx',
+        bookSST: true,
+        type: 'array'
+      })
+      console.log(wbout)
+      try {
+        fileSaver.saveAs(
+          new Blob([wbout], { type: 'application/octet-stream;charset=utf-8' }),
+          'download.xlsx'
+        )
+      } catch (e) {
+        if (typeof console !== 'undefined') {
+          console.log(e, wbout)
+        }
       }
     }
+    /**
+     * 导出全量数据
+     */
+    const exportDataAll = async () => {
+      // console.log('导出全量数据')
+      await (selectedData.value = dataList.value)
+      exportDataSelect()
+    }
+    /**
+     * JIRA汇总操作
+     */
+    const summaryData = ref([
+      {id: '00122xxxx', name: '王立林', workload: '12', saturation: '1.2'}
+    ])
     return {
       activeNames,
       data,
@@ -365,7 +421,12 @@ export default {
       currentPage,
       pageSize,
       handleSelectionChange,
-      selectedData
+      isShow,
+      selectedData,
+      clearSelection,
+      exportDataAll,
+      exportDataSelect,
+      summaryData
     }
   }
 }
@@ -380,22 +441,13 @@ function useDataFilter(arr, keyName, val) {
     return item[keyName] === val
   })
 }
-/**
- * 将数据导出为excel
- * @param Array data 原始数据
- * @param String path 保存路径
- *
-*/
-// function exportData(data, path) {
-
-// }
 </script>
 
 <style lang="scss">
 .collapse-wrapper {
   background-color: #FFFFFF;
   .collapse-main {
-    padding: 21px;
+    padding: 7px 7px 7px 7px;
     .collapse-item {
       .el-collapse-item__header {
         font-size: 20px;
@@ -409,18 +461,29 @@ function useDataFilter(arr, keyName, val) {
           margin-left: 12px;
         }
       }
+      .el-collapse-item__content {
+        padding: 2px;
+      }
       .table-wrapper {
         font-size: 12px;
       }
       .search-item {
-        padding: 14px 36px;
+        padding: 0px 0px 14px 36px;
+      }
+      .result-item {
+        padding: 14px 14px 0px 36px;
+      }
+      .operation-item {
+        padding: 14px 0px 14px 36px;
       }
     }
   }
 }
 .table-wrapper {
   background-color: rgb(255, 245, 245);
-  padding: 0px 12px;
+}
+.el-table th, .el-table td {
+  text-align: center!important;
 }
 .el-table th.gutter {
   display: table-cell!important;
