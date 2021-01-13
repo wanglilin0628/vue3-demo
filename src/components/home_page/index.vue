@@ -170,18 +170,22 @@
         <el-collapse-item name="operation" title="操作区域" class="collapse-item">
           <el-row :gutter="20" class="operation-item">
             <!-- 操作区域 -->
-            <el-col :span="6">
+            <el-col :span="8">
               <el-row>
                 <el-button type="primary" size="small">按周汇总</el-button>
                 <el-button type="primary" size="small">按月汇总</el-button>
               </el-row>
               <el-row>
-                <el-table :data="">
-                  <el-table-column label=""></el-table-column>
+                <el-table :data="summaryWeek" class="table-summary-week">
+                  <el-table-column label="统一认证号" prop="id"></el-table-column>
+                  <el-table-column label="姓名" prop="name" width="70px;"></el-table-column>
+                  <el-table-column label="工作量" prop="workload" width="70px;"></el-table-column>
+                  <el-table-column label="饱和度" prop="saturation" width="70px;"></el-table-column>
+                  <el-table-column label="标准工作量" prop="should" width="70px;"></el-table-column>
                 </el-table>
               </el-row>
             </el-col>
-            <el-col :span="6">操作2</el-col>
+            <!-- <el-col :span="6">操作2</el-col> -->
             <el-col :span="6">操作3</el-col>
             <el-col :span="6">操作4</el-col>
           </el-row>
@@ -390,8 +394,9 @@ export default {
     /**
      * JIRA汇总操作
      */
-    const summaryData = ref([
-      {id: '00122xxxx', name: '王立林', workload: '12', saturation: '1.2'}
+    const summaryWeek = ref([
+      {id: '00122xxxx', name: '王立林', workload: 6, saturation: 1.2, should: 5},
+      {id: '00122xxxx', name: '王立林', workload: 4, saturation: 0.8, should: 5}
     ])
     return {
       activeNames,
@@ -426,7 +431,7 @@ export default {
       clearSelection,
       exportDataAll,
       exportDataSelect,
-      summaryData
+      summaryWeek
     }
   }
 }
