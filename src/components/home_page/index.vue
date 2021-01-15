@@ -170,24 +170,43 @@
         <el-collapse-item name="operation" title="操作区域" class="collapse-item">
           <el-row :gutter="20" class="operation-item">
             <!-- 操作区域 -->
-            <el-col :span="8">
+            <el-col :span="12">
               <el-row>
-                <el-button type="primary" size="small">按周汇总</el-button>
-                <el-button type="primary" size="small">按月汇总</el-button>
+                <el-button type="primary" size="small" @click="summaryByWeek">按周汇总</el-button>
+                <el-button type="primary" size="small" @click="summaryByMonth">按月汇总</el-button>
+                <el-button type="success" size="small" @click="summaryByPerson">按个人汇总</el-button>
               </el-row>
               <el-row>
-                <el-table :data="summaryWeek" class="table-summary-week">
-                  <el-table-column label="统一认证号" prop="id"></el-table-column>
-                  <el-table-column label="姓名" prop="name" width="70px;"></el-table-column>
-                  <el-table-column label="工作量" prop="workload" width="70px;"></el-table-column>
-                  <el-table-column label="饱和度" prop="saturation" width="70px;"></el-table-column>
-                  <el-table-column label="标准工作量" prop="should" width="70px;"></el-table-column>
+                <el-table :data="summaryData" class="table-summary" v-if="isSummary">
+                  <el-table-column label="统一认证号" prop="id" width="90px;"></el-table-column>
+                  <el-table-column label="时间范围" width="155px;">
+                    <template #default="scope">
+                      <span v-if="scope.row.timeStart">{{ scope.row.timeStart}} - {{scope.row.timeEnd}}</span>
+                      <span v-if="scope.row.timeStr">{{ scope.row.timeStr }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="姓名" prop="name" width="65px;"></el-table-column>
+                  <el-table-column label="工作量" prop="workload" width="65px;"></el-table-column>
+                  <el-table-column label="饱和度" prop="saturation" width="65px;"></el-table-column>
+                  <el-table-column label="标准" prop="should" width="65px;"></el-table-column>
+                  <el-table-column label="状态">
+                    <template #default="scope">
+                      <el-tag type="success" v-if="scope.row.workload >= scope.row.should" size="small">正常</el-tag>
+                      <el-tag type="danger" v-else size="small">异常</el-tag>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </el-row>
+              <el-row></el-row>
             </el-col>
-            <!-- <el-col :span="6">操作2</el-col> -->
-            <el-col :span="6">操作3</el-col>
-            <el-col :span="6">操作4</el-col>
+            <el-col :span="12">
+              <el-row v-if="isPerson">
+                <el-button v-for="user in userList" :key="user.id" type="info" plain size="small" @click="summaryByPerson(user.id)">{{user.name}}</el-button>
+                <div id="person-bar" style="width:100%;height:400px;"></div>
+              </el-row>
+              <el-row>
+              </el-row>
+            </el-col>
           </el-row>
         </el-collapse-item>
       </el-collapse>
@@ -196,9 +215,10 @@
 </template>
 
 <script>
-import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue'
+import { computed, getCurrentInstance, onBeforeMount, onMounted, reactive, ref } from 'vue'
 import fileSaver from 'file-saver'
 import XLSX from 'xlsx'
+import { init } from 'echarts'
 export default {
   setup() {
     const activeNames = ref(['result'])
@@ -394,10 +414,60 @@ export default {
     /**
      * JIRA汇总操作
      */
+    const isSummary = ref(false)
     const summaryWeek = ref([
-      {id: '00122xxxx', name: '王立林', workload: 6, saturation: 1.2, should: 5},
-      {id: '00122xxxx', name: '王立林', workload: 4, saturation: 0.8, should: 5}
+      {id: '00122xxxx', name: '王立林', workload: 6, saturation: 1.2, should: 5, timeStart: '20210115', timeEnd: '20210121'},
+      {id: '00122xxxx', name: '王立林', workload: 4, saturation: 0.8, should: 5, timeStart: '20210122', timeEnd: '20210128'}
     ])
+    const summaryMonth = ref([
+      {id: '00122xxxx', name: '王立林', workload: 24, saturation: 1.2, should: 20, timeStr: '2021年1月'},
+      {id: '00122xxxx', name: '王立林', workload: 20, saturation: 1, should: 20, timeStr: '2021年2月'}
+    ])
+    const summaryData = ref([])
+    const summaryByWeek = () => {
+      summaryData.value = summaryWeek.value
+      isSummary.value = true
+    }
+    const summaryByMonth = () => {
+      summaryData.value = summaryMonth.value
+      isSummary.value = true
+    }
+    onBeforeMount(() => {
+      summaryByWeek()
+    })
+    const userList = ref([
+      {id: '00122xxxx', name: '王立林'},
+      {id: '00122xxxx', name: '易坚'}
+    ])
+    const isPerson = ref(false)
+    const summaryByPerson = (val) => {
+      if (val) {
+        // console.log(val)
+        createPersonBar()
+      }
+      isPerson.value = true
+    }
+    const createPersonBar = function() {
+      const bar = init(document.getElementById('main'))
+      const options = {
+        xAxis: {
+          type: '',
+          data: []
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+          data: [],
+          type: 'bar',
+          showBackground: true,
+          backGroudStyle: {
+            color: 'rgba(220, 220, 220, 0.8)'
+          }
+        }]
+      }
+      bar.setOption(options)
+    }
     return {
       activeNames,
       data,
@@ -431,7 +501,15 @@ export default {
       clearSelection,
       exportDataAll,
       exportDataSelect,
-      summaryWeek
+      summaryWeek,
+      summaryMonth,
+      summaryData,
+      summaryByWeek,
+      summaryByMonth,
+      isSummary,
+      userList,
+      isPerson,
+      summaryByPerson
     }
   }
 }
@@ -458,6 +536,7 @@ function useDataFilter(arr, keyName, val) {
         font-size: 20px;
         font-family: Arial, Helvetica, sans-serif;
         padding-left: 12px;
+        padding-top: 12px;
         background-color: transparent!important;
         &:hover {
           color: red;
@@ -480,6 +559,9 @@ function useDataFilter(arr, keyName, val) {
       }
       .operation-item {
         padding: 14px 0px 14px 36px;
+        .table-summary {
+          font-size: 12px;
+        }
       }
     }
   }
